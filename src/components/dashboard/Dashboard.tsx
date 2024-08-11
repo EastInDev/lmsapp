@@ -1,44 +1,59 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState, useEffect } from "react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 const courseData = [
-  { name: '웹 개발', 학생수: 120 },
-  { name: '데이터 과학', 학생수: 98 },
-  { name: '인공지능', 학생수: 86 },
-  { name: '모바일 앱 개발', 학생수: 99 },
-  { name: '클라우드 컴퓨팅', 학생수: 85 },
+  { name: "웹 개발", 학생수: 120 },
+  { name: "데이터 과학", 학생수: 98 },
+  { name: "인공지능", 학생수: 86 },
+  { name: "모바일 앱 개발", 학생수: 99 },
+  { name: "클라우드 컴퓨팅", 학생수: 85 },
 ];
 
 const userActivityData = [
-  { day: '월', 활동량: 150 },
-  { day: '화', 활동량: 230 },
-  { day: '수', 활동량: 180 },
-  { day: '목', 활동량: 275 },
-  { day: '금', 활동량: 200 },
-  { day: '토', 활동량: 170 },
-  { day: '일', 활동량: 145 },
+  { day: "월", 활동량: 150 },
+  { day: "화", 활동량: 230 },
+  { day: "수", 활동량: 180 },
+  { day: "목", 활동량: 275 },
+  { day: "금", 활동량: 200 },
+  { day: "토", 활동량: 170 },
+  { day: "일", 활동량: 145 },
 ];
 
 const completionRateData = [
-  { name: '완료', value: 75 },
-  { name: '미완료', value: 25 },
+  { name: "완료", value: 75 },
+  { name: "미완료", value: 25 },
 ];
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 export default function Dashboard() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // 데이터 로딩 시뮬레이션
-    setTimeout(() => setIsLoading(false), 1000);
+    setTimeout(() => setLoading(false), 1000);
   }, []);
 
-  if (isLoading) {
-    return <div className="text-center">로딩 중...</div>;
+  if (loading) {
+    return <LoadingSpinner />;
   }
 
   return (
@@ -94,10 +109,15 @@ export default function Dashboard() {
                 outerRadius={80}
                 fill="#8884d8"
                 dataKey="value"
-                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                label={({ name, percent }) =>
+                  `${name} ${(percent * 100).toFixed(0)}%`
+                }
               >
                 {completionRateData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={COLORS[index % COLORS.length]}
+                  />
                 ))}
               </Pie>
               <Tooltip />

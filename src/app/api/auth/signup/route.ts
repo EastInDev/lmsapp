@@ -1,13 +1,27 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
+import pool from "@/lib/db";
+import { hashPassword } from "@/lib/auth";
 
 export async function POST(request: Request) {
-  const { name, email, password, role } = await request.json();
+  try {
+    const { name, email, password, role } = await request.json();
 
-  // 여기에 실제 데이터베이스 저장 로직이 들어갑니다.
-  // 지금은 간단히 콘솔에 출력만 하겠습니다.
-  console.log('New user:', { name, email, role });
+    const hashedPassword = await hashPassword(password);
 
-  // 실제로는 여기서 비밀번호 해싱, 데이터베이스 저장 등의 작업을 수행해야 합니다.
+    const result = await pool.query(
+      "INSERT INTO users (name, email, password, role) VALUES ($1, $2, $3, $4) RETURNING id",
+      [name, email, hashedPassword, role]
+    );
 
-  return NextResponse.json({ message: 'User registered successfully' }, { status: 201 });
+    return NextResponse.json(
+      { message: "User registered successfully", userId: result.rows[0].id },
+      { status: 201 }
+    );
+  } catch (error) {
+    console.error("Signup error:", error);
+    return NextResponse.json(
+      { message: "Error registering user" },
+      { status: 500 }
+    );
+  }
 }
